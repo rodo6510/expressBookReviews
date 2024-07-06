@@ -133,7 +133,7 @@ regd_users.delete('/auth/review/:isbn', (req, res) => {
             }
 
             if (reviewDeleted) {
-                res.status(200).json({ success: true, message: `${username} successfully deleted a Review successfully` });
+                res.status(200).json({ success: true, message: '${username} successfully deteleted Review successfully' });
             } else {
                 res.status(403).json({ message: 'Review not found or you are not authorized to delete this review.' });
             }
