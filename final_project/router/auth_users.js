@@ -5,6 +5,8 @@ const regd_users = express.Router();
 
 let users = [];
 
+const SECRET_KEY = "secret42";
+
 const isValid = (username)=>{ //returns boolean
 //write code to check is the username is valid
     let userswithsamename = users.filter((user) => {
@@ -31,30 +33,25 @@ const authenticatedUser = (username, password) => {
 //only registered users can login
 regd_users.post("/login", (req,res) => {
   //Write your code here
-  // return res.status(300).json({message: "Yet to be implemented"});
 
   const username = req.body.username;
   const password = req.body.password;
-  console.log(username);
-  console.log(password);
 
+  console.log(`Login - "username": ${username}, "password": ${password}`);
 
   if (!username || !password) {
-    return res.status(404).json({ message: "Error logging in" });
+    return res.status(400).json({ message: "Username and password are required" });
   }
 
-  if (authenticatedUser(username, password)) {
-    let accessToken = jwt.sign({
-      data: password
-    }, 'access', { expiresIn: 60 * 60 });
+  const user = users.find(u => u.username === username && u.password === password);
 
-    req.session.authorization = {
-      accessToken, username
-    };
-    return res.status(200).send("User successfully logged in");
-  } else {
-    return res.status(208).json({ message: "Invalid Login. Check username and password" });
+  if (!user) {
+    return res.status(401).json({ message: "Invalid username or password" });
   }
+
+  const token = jwt.sign({ username: user.username }, SECRET_KEY, { expiresIn: '1h' });
+
+  res.status(200).json({ message: "Login successful", token: token });
 });
 
 // Add a book review

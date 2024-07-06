@@ -7,11 +7,11 @@ const public_users = express.Router();
 
 
 public_users.post("/register", (req, res) => {
-  console.log("bin here");
+  
   const username = req.body.username;
   const password = req.body.password;
-  console.log(username);
-  console.log(password);
+
+  console.log(`Register - "username": ${username}, "password": ${password}`);
 
   if (username && password) {
     if (!isValid(username)) {
